@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Valentine's Day</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-pink: #ffafbd;
+            --secondary-pink: #ffc3a0;
+            --deep-rose: #d63384;
+            --soft-white: rgba(255, 255, 255, 0.85);
+            --shadow: 0 8px 32px 0 rgba(214, 51, 132, 0.37);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden; /* Prevent scrolling outside the slider */
+            background: linear-gradient(135deg, var(--primary-pink), var(--secondary-pink));
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* --- Floating Hearts Background --- */
+        #heart-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .heart {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.6);
+            user-select: none;
+            animation: float linear infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* --- Slider Logic --- */
+        .slider-wrapper {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            transition: transform 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+            z-index: 1;
+        }
+
+        .slide {
+            min-width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            text-align: center;
+        }
+
+        /* --- Card Content --- */
+        .card {
+            background: var(--soft-white);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 24px;
+            padding: 40px 30px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: var(--shadow);
+            transform: translateY(20px);
+            opacity: 0;
+            transition: all 0.8s ease-out;
+        }
+
+        .slide.active .card {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3rem;
+            color: var(--deep-rose);
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.05);
+        }
+
+        p {
+            font-size: 1.2rem;
+            color: #555;
+            line-height: 1.6;
+            font-weight: 400;
+        }
+
+        /* --- UI Elements --- */
+        .nav-btn {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            background: var(--deep-rose);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(214, 51, 132, 0.4);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-btn:hover {
+            transform: translateX(-50%) scale(1.05);
+            background: #b8266d;
+            box-shadow: 0 6px 20px rgba(214, 51, 132, 0.6);
+        }
+
+        .nav-btn:active {
+            transform: translateX(-50%) scale(0.95);
+        }
+
+        .glow-text {
+            animation: textGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes textGlow {
+            from { text-shadow: 0 0 5px #fff, 0 0 10px #ffafbd; }
+            to { text-shadow: 0 0 10px #fff, 0 0 20px #ffafbd; }
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 480px) {
+            h1 { font-size: 2.2rem; }
+            p { font-size: 1rem; }
+            .card { padding: 30px 20px; }
+            .nav-btn { padding: 12px 30px; width: 80%; justify-content: center;}
+        }
+    </style>
+</head>
+<body>
+
+    <div id="heart-container"></div>
+
+    <div class="slider-wrapper" id="slider">
+        <!-- Slide 1 -->
+        <section class="slide active">
+            <div class="card">
+                <h1 class="glow-text">Happy Valentine’s Day</h1>
+                <p>"You are the reason my heart smiles every single day."</p>
+            </div>
+        </section>
+
+        <!-- Slide 2 -->
+        <section class="slide">
+            <div class="card">
+                <h1 class="glow-text">To My Favorite Person</h1>
+                <p>"In a world full of chaos, you are my peace."</p>
+            </div>
+        </section>
+
+        <!-- Slide 3 -->
+        <section class="slide">
+            <div class="card">
+                <h1 class="glow-text">Forever Us</h1>
+                <p>"Every love story is beautiful, but ours is my favorite."</p>
+            </div>
+        </section>
+    </div>
+
+    <button class="nav-btn" id="nextBtn">
+        Next Surprise <span>❤</span>
+    </button>
+
+    <script>
+        // --- Slider Logic ---
+        const slider = document.getElementById('slider');
+        const slides = document.querySelectorAll('.slide');
+        const nextBtn = document.getElementById('nextBtn');
+        let currentSlide = 0;
+
+        nextBtn.addEventListener('click', () => {
+            currentSlide++;
+            
+            if (currentSlide >= slides.length) {
+                currentSlide = 0; // Loop back to start
+            }
+
+            // Move the slider
+            slider.style.transform = `translateX(-${currentSlide * 100}%)`;
+
+            // Update Active Class for animations
+            slides.forEach((slide, index) => {
+                if (index === currentSlide) {
+                    slide.classList.add('active');
+                } else {
+                    slide.classList.remove('active');
+                }
+            });
+
+            // Change button text on last slide
+            if (currentSlide === slides.length - 1) {
+                nextBtn.innerHTML = "Start Over <span>❤</span>";
+            } else {
+                nextBtn.innerHTML = "Next Surprise <span>❤</span>";
+            }
+        });
+
+        // --- Heart Animation Logic ---
+        function createHeart() {
+            const heartContainer = document.getElementById('heart-container');
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            
+            // Randomize heart type
+            const hearts = ['❤', '💗', '🌸', '💕', '❣'];
+            heart.innerHTML = hearts[Math.floor(Math.random() * hearts.length)];
+            
+            // Randomize position and animation
+            const startX = Math.random() * 100;
+            const size = Math.random() * (30 - 10) + 10;
+            const duration = Math.random() * (10 - 5) + 5;
+            
+            heart.style.left = startX + 'vw';
+            heart.style.fontSize = size + 'px';
+            heart.style.animationDuration = duration + 's';
+            heart.style.opacity = Math.random();
+
+            heartContainer.appendChild(heart);
+
+            // Remove heart after animation finishes
+            setTimeout(() => {
+                heart.remove();
+            }, duration * 1000);
+        }
+
+        // Generate hearts continuously
+        setInterval(createHeart, 300);
+
+        // Add a few initial hearts so the screen isn't empty on load
+        for(let i=0; i<15; i++) {
+            setTimeout(createHeart, i * 200);
+        }
+    </script>
+</body>
+</html>
